@@ -1,0 +1,79 @@
+﻿@page
+@model Shop.UI.Pages.Checkout.CustomerInformationModel
+
+@{
+}
+
+<div class="columns">
+    <div class="column is-4">
+
+        <form method="post">
+            <div class="field">
+                <p class="control">
+                    <label class="label">First Name</label>
+                    <input class="input" asp-for="CustomerInformation.FirstName" placeholder="First Name" />
+                </p>
+
+                <span class="is-warning" asp-validation-for="CustomerInformation.FirstName"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Last Name</label>
+                    <input class="input" asp-for="CustomerInformation.LastName" placeholder="Last Name" />
+                </p>
+
+                <span class="is-warning" asp-validation-for="CustomerInformation.LastName"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Address</label>
+                    <input class="input" asp-for="CustomerInformation.Address1" placeholder="Address" />
+                </p>
+
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Address 2</label>
+                    <input class="input" asp-for="CustomerInformation.Address2" placeholder="Address 2" />
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">City</label>
+                    <input class="input" asp-for="CustomerInformation.City" placeholder="City" />
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Zipcode</label>
+                    <input class="input" asp-for="CustomerInformation.PostCode" placeholder="Zipcode" />
+                </p>
+
+                <span></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Email</label>
+                    <input class="input" asp-for="CustomerInformation.Email" placeholder="Email" />
+                </p>
+
+                <span></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Phone Number</label>
+                    <input class="input" asp-for="CustomerInformation.PhoneNumber" placeholder="Phone Number" />
+                </p>
+
+                <span></span>
+            </div>
+            <div class="field">
+                <button class="button is-success" type="submit">Submit</button>
+            </div>
+
+        </form>
+    </div>
+    <div class="column is-6 is-offset-2">
+        <vc:cart view="Default"></vc:cart>
+    </div>
+</div>

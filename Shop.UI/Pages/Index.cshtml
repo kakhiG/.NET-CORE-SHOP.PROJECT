@@ -1,0 +1,64 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="product">
+
+</div>
+
+<div>
+    <div class="columns is-multiline is-mobile">
+        @{
+            for (int i = 0; i < 5; i++)
+            {
+                foreach (var p in Model.Products)
+                {
+                    <div class="column is-4-desktop is-4-tablet is-6-mobile ">
+                        <a asp-page="Product" asp-route-name="@p.Name.Replace(" ", "-")">
+                            <div class="card">
+                                <div class="card-image">
+                                    <figure class="image is-4by3">
+                                        <img src="~/images/HostGator.png" alt="Placeholder image">
+                                    </figure>
+                                </div>
+                                @{
+                                    string message = "";
+                                    string cssClass = "";
+                                    if (p.StockCount == 0)
+                                    {
+                                        cssClass = "is-danger";
+                                        message = $"We only have {p.StockCount} left in stock";
+
+                                    }
+                                    else if (p.StockCount <= 10)
+                                    {
+                                        cssClass = "is-warning";
+                                        message = $"We only have {p.StockCount} left. More are on the way";
+                                    }
+                                }
+                                @if (p.StockCount <= 10)
+                                {
+                                    <div class="notification is-paddingless has-text-centered @cssClass">
+                                        @message
+                                    </div>
+                                }
+                                <div class="card-content">
+                                    <p class="title is-4">
+                                        @p.Name
+                                    </p>
+                                    <p class="subtitle">
+                                        @p.Description
+                                    </p>
+                                    <p class="subtitle">
+                                        <span class="has-text-weight-bold">Price: </span>@p.Value
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

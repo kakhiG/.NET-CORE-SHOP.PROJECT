@@ -1,0 +1,107 @@
+﻿@page "{name}"
+
+@model ProductModel
+
+@{
+    //bool lowOnStock =
+}
+<div class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-6">
+                    <figure class="image">
+                        <img src="~/images/HostGator.png" alt="">
+                    </figure>
+                </div>
+                <div class="column is-6">
+                    <section class="content">
+                        <header>
+                            <p class="title">@Model.Product.Name</p>
+                        </header>
+                        <main>
+                            <p class="subtitle">@Model.Product.Description</p>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <p class="has-text-weight-bold">Price: @Model.Product.Value</p>
+                        </main>
+                        <hr>
+                        <footer>
+                            <form method="post">
+                                <div class="field is-horizontal">
+                                    <label class="label">Size: </label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select class="select" asp-for="CartViewModel.StockId" onchange="toggleStock(event)">
+                                                @foreach (var s in Model.Product.Stock)
+                                                {
+                                                    bool disabled = s.Qty <= 0;
+                                                    <option value="@s.Id" disabled="@disabled">@s.Description</option>
+                                                }
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Qty: </label>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field is-narrow">
+                                        <div class="control">
+                                            <input class="input" asp-for="CartViewModel.Qty" value="0">
+                                        </div>
+                                        @foreach (var stock in Model.Product.Stock)
+                                        {
+                                            if (stock.Qty <= 10)
+                                            {
+                                                <p class="help is-danger is-hidden low-stock" id="low-stock-@stock.Id">
+                                                    @(stock.Qty == 0 ? "Out of stock" : $"{stock.Qty} Left in stock")
+                                                </p>
+                                            }
+
+                                        }
+
+                                    </div>
+                                </div>
+                                <button class="button is-success" type="submit">Submit</button>
+                            </form>
+                        </footer>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+
+
+
+    <div>
+
+    </div>
+</div>
+<script>
+var toggleStock = function (e) {
+        console.log(e);
+
+        var stockToHide = document.querySelectorAll('.low-stock')
+
+        stockToHide.forEach(function (e) {
+            e.classList.add('is-hidden');
+        })
+
+        showLowStock(e.target.value);
+    }
+
+    var showLowStock = function (id) {
+        var stockToShow = document.getElementById('low-stock-' + id);
+
+        if (stockToShow !== null && stockToShow !== undefined)
+            stockToShow.classList.remove('is-hidden');
+    }
+
+    showLowStock(document.getElementById('CartViewModel_StockId').value);
+</script>

@@ -1,0 +1,19 @@
+﻿@page
+@model Shop.UI.Pages.Accounts.LoginModel
+
+@{
+
+}
+<div class="column is-6 is-offset-3">
+    <div class="field">
+        <form class="control" action="" method="post">
+            <div class="content">
+                <input class="input" asp-for="Input.UserName" placeholder="UserName">
+            </div>
+            <div class="content">
+                <input class="input" asp-for="Input.Password" placeholder="Password" type="password">
+            </div>
+            <input class="button is-success" type="submit" name="name" value="Sign In">
+        </form>
+    </div>
+</div>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Shop.Application.ProductsAdmin;
 using Shop.Application.StockAdmin;
+using Shop.Application.UserAdmin;
 using Shop.Database;
 using System.Threading.Tasks;
 
@@ -29,4 +30,4 @@ namespace Shop.UI.Controllers
 
     }
 }
-}
+

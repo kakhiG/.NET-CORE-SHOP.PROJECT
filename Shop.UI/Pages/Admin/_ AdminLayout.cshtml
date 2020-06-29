@@ -8,12 +8,10 @@
     <title>@ViewData["Title"] - Shop.UI</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/css/site.css" />
-
+        <link rel="stylesheet" href="~/lib/bulma-0.7.2/css/bulma.css">
     </environment>
-    <environment exclude="Production">
-        <link href="~/lib/bulma-0.9.0/css/bulma.min.css" rel="stylesheet" />
-
+    <environment include="Production">
+        <link rel="stylesheet" href="~/lib/bulma-0.7.2/css/bulma.min.css">
     </environment>
 </head>
 <body>
@@ -26,11 +24,11 @@
                     @if ((await authService.AuthorizeAsync(User, "Manager")).Succeeded)
                     {
                         <p class="menu-label">Store Menu</p>
-                    <ul class="menu-list ">
-                        <li><a asp-page="/Admin/Index">Products</a></li>
-                        <li><a asp-page="/Admin/Orders">Orders</a></li>
-                        <li><a asp-page="/Admin/Stock">Stock</a></li>
-                    </ul>
+                        <ul class="menu-list ">
+                            <li><a asp-page="/Admin/Index">Products</a></li>
+                            <li><a asp-page="/Admin/Orders">Orders</a></li>
+                            <li><a asp-page="/Admin/Stock">Stock</a></li>
+                        </ul>
                     }
 
                     @if ((await authService.AuthorizeAsync(User, "Admin")).Succeeded)

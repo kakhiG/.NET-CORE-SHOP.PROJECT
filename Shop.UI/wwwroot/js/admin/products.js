@@ -1,55 +1,56 @@
 ﻿var app = new Vue({
     el: '#app',
     data: {
-            editing: false,
-            loading: false,
-            objectIndex: 0,
-            productModel: {
+
+        loading: false,
+        editing: false,
+        objectIndex: 0,
+        productModel: {
             id: 0,
-                name: "Product Name",
-                    description: "Product.Description",
-                        value: 1.99
-            },  
-            products: []
+            name: "",
+            description: "",
+            value: 0
+        },
+        products: []
     },
     mounted() {
         this.getProducts();
     },
     methods: {
-        getProducts(id) {
+        getProduct(id) {
             this.loading = true;
             axios.get('/products/' + id)
                 .then(res => {
                     console.log(res);
                     var product = res.data;
                     this.productModel = {
-                        id=product.id,
-                        name=product.name,
-                        description=product.description,
-                        value=product.value,
-                    };
+                        id: product.id,
+                        name: product.name,
+                        description: product.description,
+                        value: product.value
+                    }
+
                 })
                 .catch(err => {
                     console.log(err);
                 })
                 .then(() => {
-                    this.loading = false;
-                });
+                    this.loading = false
+                })
         },
         getProducts() {
             this.loading = true;
-            axios.post('/products')
+            axios.get('/products')
                 .then(res => {
                     console.log(res);
-                    this.products = res.data;
+                    this.products = res.data
                 })
                 .catch(err => {
                     console.log(err);
                 })
                 .then(() => {
-                    this.loading = false;
-
-                });
+                    this.loading = false
+                })
         },
         createProduct() {
             this.loading = true;
@@ -62,13 +63,12 @@
                     console.log(err);
                 })
                 .then(() => {
-                    this.loading = false;
-                    this.editing = false;
-                });
+                    this.loading = false
+                })
         },
         updateProduct() {
             this.loading = true;
-            axios.put('//products', this.productModel)
+            axios.put('/products', this.productModel)
                 .then(res => {
                     console.log(res.data);
                     this.products.splice(this.objectIndex, 1, res.data);
@@ -79,36 +79,37 @@
                 .then(() => {
                     this.loading = false;
                     this.editing = false;
-                });
+                })
         },
-        deleteProducts(id, index) {
+        editProduct(id, index) {
+            this.objectIndex = index;
+            this.getProduct(id);
+            this.editing = true;
+        },
+        deleteProduct(id, index) {
             this.loading = true;
             axios.delete('/products/' + id)
                 .then(res => {
                     console.log(res);
-                    this.products = splice(index, 1);
+                    this.products.splice(index, 1)
                 })
                 .catch(err => {
                     console.log(err);
                 })
                 .then(() => {
-                    this.loading = false;
-                });
+                    this.loading = false
+                })
         },
         newProduct() {
             this.editing = true;
             this.productModel.id = 0;
         },
-        editProduct(id, index) {
-            this.objectIndex = index;
-            this.getProducts(id);
-            this.editing = true;
-        },
         cancel() {
             this.editing = false;
         }
+
     },
     computed: {
-    }
 
+    }
 });

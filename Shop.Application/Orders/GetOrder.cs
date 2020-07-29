@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Domain.Infrastracture;
+using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,12 @@ namespace Shop.Application.Orders
 {
     public class GetOrder
     {
-        private ApplicationDbContext _ctx;
+       
+        private readonly IOrderManager _orderManager;
 
-        public GetOrder(ApplicationDbContext ctx)
+        public GetOrder(IOrderManager orderManager)
         {
-            _ctx = ctx;
+            _orderManager = orderManager;
         }
 
         public class Response
@@ -41,36 +44,32 @@ namespace Shop.Application.Orders
             public string StockDescription { get; set; }
         }
 
-        public Response Do(string reference)=> _ctx.Orders
-                                        
-                .Where(x => x.OrderRef == reference)
-                .Include(x => x.OrderStocks)
-                .ThenInclude(x => x.Stock)
-                .ThenInclude(x => x.Product)
-                .Select(x => new Response
-                {
-                    OrderRef = x.OrderRef,
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    Address1 = x.Address1,
-                    Address2 = x.Address2,
-                    City = x.City,
-                    PostCode = x.PostCode,
-                    Email = x.Email,
-                    PhoneNumber = x.PhoneNumber,
-                    Products = x.OrderStocks.Select(y => new Product
-                    {
-                        Name = y.Stock.Product.Name,
-                        Description = y.Stock.Product.Description,
-                        Value = $"${y.Stock.Product.Value.ToString("N2")}",
-                        Qty = y.Qty,
-                        StockDescription = y.Stock.Description,
+        public Response Do(string reference) =>
+            _orderManager.GetOrderByReference(reference,Projection);
 
-                    }),
+        private static Func<Order, Response> Projection = (order) =>
+               new Response
+               {
+                   OrderRef = order.OrderRef,
+                   FirstName = order.FirstName,
+                   LastName = order.LastName,
+                   Address1 = order.Address1,
+                   Address2 = order.Address2,
+                   City = order.City,
+                   PostCode = order.PostCode,
+                   Email = order.Email,
+                   PhoneNumber = order.PhoneNumber,
+                   Products = order.OrderStocks.Select(y => new Product
+                   {
+                       Name = y.Stock.Product.Name,
+                       Description = y.Stock.Product.Description,
+                       Value = $"${y.Stock.Product.Value.ToString("N2")}",
+                       Qty = y.Qty,
+                       StockDescription = y.Stock.Description,
 
-                    TotalValue = x.OrderStocks.Sum(y => y.Stock.Product.Value).ToString("N2")
-                })
-                .FirstOrDefault();
-        
+                   }),
+                   TotalValue = order.OrderStocks.Sum(y => y.Stock.Product.Value).ToString("N2")
+
+               };
     }
 }

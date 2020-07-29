@@ -1,4 +1,5 @@
 ﻿using Shop.Database;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,12 @@ namespace Shop.Application.StockAdmin
 {
     public class CreateStock
     {
-        private ApplicationDbContext _ctx;
+    
+        private IStockManager _stockManager;
 
-        public CreateStock(ApplicationDbContext ctx)
+        public CreateStock(IStockManager stockManager)
         {
-            _ctx = ctx; 
+            _stockManager = stockManager;
         }
 
         public async Task <Response>Do(Request request)
@@ -25,9 +27,7 @@ namespace Shop.Application.StockAdmin
                 ProductId = request.ProductId
             };
 
-            _ctx.Stock.Add(stock);
-
-            await _ctx.SaveChangesAsync();
+            await _stockManager.CreateProduct(stock);
 
             return new Response
             {

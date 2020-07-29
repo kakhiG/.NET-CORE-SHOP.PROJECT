@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Domain.Infrastracture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,35 +10,31 @@ namespace Shop.Application.StockAdmin
 {
     public class GetStock
     {
-        private ApplicationDbContext _ctx;
+        
+        private IProductManager _productManager;
 
-        public GetStock(ApplicationDbContext ctx)
+        public GetStock(IProductManager productManager)
         {
-            _ctx = ctx;
+            _productManager = productManager;
         }
 
         public IEnumerable<ProductViewModel> Do()
         {
-            var stock = _ctx.Products
-                .Include(x=>x.Stock)
-                .Select(x=>new ProductViewModel
+            return _productManager.GetProductsWithStock(x => new ProductViewModel
+            {
+                Id = x.Id,
+                Description = x.Description,
+                Stock = x.Stock.Select(y => new StockViewModel
                 {
-                    Id = x.Id,
-                    Description = x.Description,
-                    Stock = x.Stock.Select(y => new StockViewModel
-                    {
 
-                        Id = y.Id,
-                        Description = y.Description,
-                        Qty = y.Qty,
+                    Id = y.Id,
+                    Description = y.Description,
+                    Qty = y.Qty,
 
-                    })
-                    
                 })
-                
-                .ToList();
 
-            return stock;
+            });
+            
         }
 
         public class StockViewModel

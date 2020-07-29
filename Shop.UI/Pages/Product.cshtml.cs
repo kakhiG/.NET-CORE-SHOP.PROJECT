@@ -25,9 +25,12 @@ namespace Shop.UI.Pages
 
 
         public GetProduct.ProductViewModel Product { get; set; }
-        public async Task<IActionResult> OnGet(string name)
+
+        public async Task<IActionResult> OnGet(
+            string name,
+            [FromServices] GetProduct getProduct)
         {
-            Product = await new GetProduct(_ctx).Do(name.Replace("-", " "));
+            Product = await getProduct.Do(name.Replace("-", " "));
             if (Product == null)
                 return RedirectToPage("Index");
             else

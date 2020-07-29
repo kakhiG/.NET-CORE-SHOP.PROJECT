@@ -1,4 +1,5 @@
 ﻿using Shop.Database;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,12 @@ namespace Shop.Application.ProductsAdmin
 {
     public class CreateProduct
     {
-        private ApplicationDbContext _context;
 
-        public CreateProduct(ApplicationDbContext context )
+        private IProductManager __productManager;
+
+        public CreateProduct(IProductManager productManager )
         {
-            _context = context;
+            __productManager = productManager;
         }
 
         public async Task<Response> Do(Request request)
@@ -25,10 +27,10 @@ namespace Shop.Application.ProductsAdmin
                 Value = request.Value
             };
 
-            _context.Products.Add(product);
-            
-
-            await _context.SaveChangesAsync();
+            if(await __productManager.CreateProduct(product)>0)
+            {
+                throw new Exception("Failed to create product");
+            }
 
             return new Response
             {

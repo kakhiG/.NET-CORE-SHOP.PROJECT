@@ -7,18 +7,14 @@ namespace Shop.UI.Pages
 {
     public class OrderModel : PageModel
     {
-        private readonly ApplicationDbContext _ctx;
-
-        public OrderModel(ApplicationDbContext ctx)
-        {
-            _ctx = ctx;
-        }
 
         public GetOrder.Response Order { get; set; }
 
-        public void OnGet(string reference)
+        public void OnGet(
+            string reference,
+            [FromServices] GetOrder getOrder)
         {
-            Order = new GetOrder(_ctx).Do(reference);
+            Order = getOrder.Do(reference);
         }
     }
 }

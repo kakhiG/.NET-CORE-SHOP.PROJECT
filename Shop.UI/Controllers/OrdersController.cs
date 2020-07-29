@@ -30,8 +30,21 @@ namespace Shop.UI.Controllers
         public IActionResult GetOrder(int id, [FromServices] GetOrder getOrder) => Ok(getOrder.Do(id));
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id,
-        [FromServices] UpdateOrder updateOrder) => Ok((await updateOrder.Do(id)));
+        public async Task<IActionResult> UpdateOrder(
+            int id,
+        [FromServices] UpdateOrder updateOrder)
+
+        {
+            var sucess = await updateOrder.DoAsync(id)>0;
+            if(sucess)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 
 }

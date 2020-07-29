@@ -1,4 +1,5 @@
 ﻿using Shop.Database;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,17 @@ namespace Shop.Application.ProductsAdmin
 {
     public class DeleteProduct
     {
-        private ApplicationDbContext _context;
+        
+        private IProductManager _productManager;
 
-        public DeleteProduct(ApplicationDbContext context )
+        public DeleteProduct(IProductManager productManager )
         {
-            _context = context;
+            _productManager = productManager;
         }
 
-        public async Task<bool> Do(int id)
+        public  Task<int> Do(int id)
         {
-            var Product = _context.Products.FirstOrDefault(x => x.Id == id);
-            _context.Products.Remove(Product);
-            await _context.SaveChangesAsync();
-            return true;
+            return _productManager.DeleteProduct(id);
         }
 
         

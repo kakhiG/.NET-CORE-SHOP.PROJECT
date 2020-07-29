@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Cart

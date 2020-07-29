@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,48 +13,35 @@ namespace Shop.Application.Products
 
     public class GetProduct
     {
-        private readonly ApplicationDbContext _ctx;
+        private readonly IStockManager _stockManager;
+        private readonly IProductManager _productManager;
+       
 
-        public GetProduct(ApplicationDbContext ctx)
+        public GetProduct(
+            IStockManager stockManager,
+            IProductManager productManager)
         {
-            _ctx = ctx;
+            _stockManager = stockManager;
+            _productManager = productManager;
         }
 
         public async Task<ProductViewModel> Do(string name)
         {
-            var stocksOnHold = _ctx.StocksOnHold.Where(x => x.ExpiryDate < DateTime.Now).ToList();
+            await _stockManager.RetrieveExpiredStockOnHold();
 
-            if (stocksOnHold.Count > 0)
-            {
-                var stockToReturn = _ctx.Stock
-                    .Where(x => stocksOnHold
-                        .Any(y => y.StockId == x.Id)).ToList();
-
-                foreach (var stock in stockToReturn)
-                {
-                    stock.Qty = stock.Qty + stocksOnHold.FirstOrDefault(x => x.StockId == stock.Id).Qty;
-                }
-
-                _ctx.StocksOnHold.RemoveRange(stocksOnHold);
-                await _ctx.SaveChangesAsync();
-            }
-
-            return _ctx.Products
-                .Include(x => x.Stock)
-                .Where(x => x.Name == name)
-                .Select(x => new ProductViewModel
+            return _productManager
+                .GetProductByName(name, x => new ProductViewModel
                 {
                     Name = x.Name,
                     Description = x.Description,
-                    Value = $"${x.Value.ToString("N2")}",
+                    Value = x.Value.GetValueString(),
                     Stock = x.Stock.Select(y => new StockViewModel
                     {
                         Id = y.Id,
                         Description = y.Description,
                         Qty = y.Qty
                     })
-                })
-                .FirstOrDefault();
+                });
         }
 
 

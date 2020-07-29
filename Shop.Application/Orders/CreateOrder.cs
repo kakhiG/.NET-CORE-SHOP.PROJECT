@@ -1,4 +1,6 @@
-﻿using Shop.Database;
+﻿using Shop.Application.Cart;
+using Shop.Database;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,11 +12,15 @@ namespace Shop.Application.Orders
 {
     public class CreateOrder
     {
-        private ApplicationDbContext _ctx;
+        private IOrderManager _orderManager;
+        private IStockManager _stockManager;
 
-        public CreateOrder(ApplicationDbContext ctx)
+        public CreateOrder(
+            IOrderManager orderManager,
+            IStockManager stockManager)
         {
-            _ctx = ctx;
+            _orderManager = orderManager;
+            _stockManager = stockManager;
         }
 
         public class Request
@@ -42,11 +48,6 @@ namespace Shop.Application.Orders
 
         public async Task<bool> Do(Request request)
         {
-            var stockOnHold = _ctx.StocksOnHold
-                    .Where(x => x.SessionId == request.SessionId)
-                    .ToList();
-
-            _ctx.StocksOnHold.RemoveRange(stockOnHold);
 
             var order = new Order
             {
@@ -69,9 +70,16 @@ namespace Shop.Application.Orders
                 }).ToList()
             };
 
-            _ctx.Orders.Add(order);
+          var sucess = await _orderManager.CreatOrder(order) > 0;
 
-            return await _ctx.SaveChangesAsync() > 0;
+            if(sucess)
+            {
+                await _stockManager.RemoveStockFromHold(request.SessionId);
+                
+                return true;
+            }
+
+            return false;
         }
 
         public string CreateOrderReference()
@@ -85,7 +93,7 @@ namespace Shop.Application.Orders
                 {
                     result[i] = chars[random.Next(chars.Length)];
                 }
-            } while (_ctx.Orders.Any(x => x.OrderRef == new string(result)));
+            } while (_orderManager.OrderReferenceExists(new string(result)));
 
 
 

@@ -1,4 +1,5 @@
 ﻿using Shop.Database;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,22 +11,23 @@ namespace Shop.Application.ProductsAdmin
 {
     public class UpdateProduct
     {
-        private ApplicationDbContext _context;
 
-        public UpdateProduct(ApplicationDbContext context )
+        private IProductManager _productManager;
+
+        public UpdateProduct(IProductManager productManager)
         {
-            _context = context;
+            _productManager = productManager;
         }
 
         public async Task<Response> Do(Request request )
         {
-            var product = _context.Products.FirstOrDefault(x => x.Id == request.Id);
+            var product = _productManager.GetProductById(request.Id, x => x);
 
             product.Name = request.Name;
             product.Description = request.Description;
-            product.Value = request.Value; 
+            product.Value = request.Value;
 
-            await _context.SaveChangesAsync();
+            await _productManager.UpdateProduct(product);
             return new Response
             {
                 Id = product.Id,

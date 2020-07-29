@@ -10,21 +10,21 @@ namespace Shop.UI.ViewComponents
 {
     public class CartViewComponents:ViewComponent
     {
-        private ApplicationDbContext _ctx;
+        private GetCart _getCart;
 
-        public CartViewComponents(ApplicationDbContext ctx)
+        public CartViewComponents(GetCart getCart)
         {
-            _ctx = ctx;
+            _getCart = getCart;
         }
 
         public IViewComponentResult Invoke(string view="Default")
         {
             if(view =="small" )
             {
-                var totalValue = new GetCart(HttpContext.Session, _ctx).Do().Sum(x => x.RealValue * x.Qty);
+                var totalValue = _getCart.Do().Sum(x => x.RealValue * x.Qty);
                 return View(view, $"£{totalValue}");
             }
-            return View(view, new GetCart(HttpContext.Session,_ctx).Do());
+            return View(view, _getCart.Do());
         }
     }
 }

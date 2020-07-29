@@ -1,71 +1,18 @@
 ﻿@page
 @using Shop.Domain.Models
 @model Shop.UI.Pages.CartModel
-
 @{
-
 }
+
+
 <div class="container">
     <div class="columns">
-        <div class="column is-8 is-offset-2">
-            @foreach (var product in Model.Cart)
-            {
-                <div class="level" id="product-@product.StockId">
-                    <div class="level-item">
-                        <img src="~/images/Image.png" alt="">
-                    </div>
-                    <div class="level-item">
-                        <p class="title">
-                            @product.Name
-                        </p>
-                        <p class="subtitle">
-
-                        </p>
-                    </div>
-                    <div class="level-item">
-                        <div class="columns is-multiline">
-                            <div class="column is-4">
-                                <button class="button" type="button"
-                                        onclick="removeOneFromCart(event)"
-                                        data-stock-id="@product.StockId">
-                                    -
-                                </button>
-                            </div>
-                            <div class="column is-4">
-                                @product.Qty
-                            </div>
-                            <div class="column is-4">
-                                <button class="button" type="button"
-                                        onclick="addOneToCart(event)"
-                                        data-stock-id="@product.StockId">
-                                    +
-                                </button>
-                            </div>
-                            <div class="column is-12 has-text-centered">
-                                <a class="has-text-warning" id=""
-                                   data-stock-id="@product.StockId"
-                                   Id="stock-@product.StockId">Remove</a>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="level-item">
-                        <p>@product.RealValue</p>
-                    </div>
-                </div>
-            }
-            <div class="has-text-right">
-                <a class="button is-text" asp-page="/Index">Return To Shop</a>
-                <a class="button is-success" asp-page="/Checkout/CustomerInformation">Checkout</a>
-            </div>
-        </div>
+        <partial name=" _CartPartial" model="@Model.Cart " />
     </div>
-
-
 </div>
 
-@section Scripts
-    {
+@section scripts { 
+    
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script>
@@ -73,52 +20,54 @@
             var stockId = e.target.dataset.stockId;
             axios.post("/Cart/AddOne/" + stockId)
                 .then(res => {
-                    var id = "stock-" + stockId;
-                    var el = document.getElementById(id);
-
-                    var qty = parseInt(el.innerText);
-
-                    el.innerText = (qty + 1);
-                    //TODO update qty
+                    updateCart();
                 })
                 .catch(err => {
-                    alert(err.message);
+                    alert(err.error);
                 })
         };
         var removeOneFromCart = function (e) {
             var stockId = e.target.dataset.stockId;
-            axios.post("/Cart/RemoveOne/" + stockId)
-                .then(res => {
-                    var id = "stock-" + stockId;
-                    var el = document.getElementById(id);
+            removeFromCart(stockId, 1);
 
-                    var qty = parseInt(el.innerText);
-
-                    el.innerText = (qty - 1);
-                    // if(isNaN(el.innerText)){
-                    //     el.innerText = qty;
-                    // }
-                    //TODO update qty
-                })
-                .catch(err => {
-                    alert(err.message
-                    );
-                })
-        };
+        }
         var removeAllFromCart = function (e) {
             var stockId = e.target.dataset.stockId;
-            axios.post("/Cart/RemoveAll/" + stockId)
+            var id = "stock-qty-" + stockId;
+            var el = document.getElementById(id);
+            var qty = parseInt(el.innerText);
+            removeFromCart(stockId, qty);
+        }
+
+        var removeFromCart = function (stockId, qty) {
+
+            axios.post("/Cart/Remove/" + stockId + '/' + qty)
                 .then(res => {
-                    var id = "product-" + stockId;
-                    var el = document.getElementById(id);
-
-
-                    el.outerHTML = "";
-
+                    updateCart();
                 })
                 .catch(err => {
-                    alert(err.message);
+                    alert(err.error);
                 })
-        };
+
+        }
+
+        var updateCart = function () {
+            axios.get('/Cart/GetCartComponent')
+                .then(res => {
+                    var html = res.data;
+                    var el = document.getElementById('car-nav');
+
+                    el.outerHTML = html;
+                });
+
+            axios.get('/Cart/GetCartMain')
+                .then(res => {
+                    var html = res.data;
+                    var el = document.getElementById('car-main');
+
+                    el.outerHTML = html;
+                })
+        }
+
     </script>
 }

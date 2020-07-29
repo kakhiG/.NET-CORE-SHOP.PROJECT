@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 using System;
 
@@ -8,11 +9,11 @@ namespace Shop.Application.Cart
 {
     public class GetCustomerInformation
     {
-        private ISession _session;
+        private ISessionManager _sessionManager;
 
-        public GetCustomerInformation(ISession session)
+        public GetCustomerInformation(ISessionManager sessionManager)
         {
-            _session = session;
+            _sessionManager = sessionManager;
         }
 
         public class Response

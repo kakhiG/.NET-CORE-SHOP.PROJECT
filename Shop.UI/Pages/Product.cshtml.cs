@@ -1,20 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using CreateProducts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Rewrite.Internal.ApacheModRewrite;
 using Shop.Application.Cart;
 using Shop.Application.Products;
 using Shop.Database;
+using Shop.Domain.Models;
 
 namespace Shop.UI.Pages
 {
     public class ProductModel : PageModel
     {
-        private ApplicationDbContext _ctx;
+        private readonly ApplicationDbContext _ctx;
 
         public ProductModel(ApplicationDbContext ctx)
         {
@@ -25,26 +23,27 @@ namespace Shop.UI.Pages
         public AddToCart.Request CartViewModel { get; set; }
 
 
+
         public GetProduct.ProductViewModel Product { get; set; }
-        
-        public async Task <IActionResult> OnGet(string name)
+        public async Task<IActionResult> OnGet(string name)
         {
-            Product = await new GetProduct(_ctx).Do(name.Replace("-", ""));
+            Product = await new GetProduct(_ctx).Do(name.Replace("-", " "));
             if (Product == null)
                 return RedirectToPage("Index");
             else
                 return Page();
         }
 
-        public async Task <IActionResult> OnPost()
+        public async Task<IActionResult> OnPost([FromServices] AddToCart addToCart)
         {
-          var stockAdded = await new AddToCart(HttpContext.Session, _ctx).Do(CartViewModel);
+
+            var stockAdded = await addToCart.Do(CartViewModel);
 
             if (stockAdded)
                 return RedirectToPage("Cart");
             else
+                //TODO add a warning
                 return Page();
         }
     }
 }
-

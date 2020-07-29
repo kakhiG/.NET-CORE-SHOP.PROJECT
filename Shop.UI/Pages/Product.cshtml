@@ -1,6 +1,6 @@
 ﻿@page "{name}"
 
-@model ProductModel
+@model Shop.UI.Pages.ProductModel
 
 @{
     //bool lowOnStock =
@@ -37,7 +37,7 @@
                                                 @foreach (var s in Model.Product.Stock)
                                                 {
                                                     bool disabled = s.Qty <= 0;
-                                        
+
                                                     <option value="@s.Id" disabled="@disabled">@s.Description</option>
                                                 }
 

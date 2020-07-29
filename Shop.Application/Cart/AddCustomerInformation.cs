@@ -1,20 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Shop.Application.Cart
 {
     public class AddCustomerInformation
     {
-        private ISession _session;
+        private ISessionManager _sessionManager;
 
-        public AddCustomerInformation(ISession session)
+        public AddCustomerInformation(ISessionManager sessionManager)
         {
-            _session = session;
+            _sessionManager = sessionManager;
         }
 
         public class Request

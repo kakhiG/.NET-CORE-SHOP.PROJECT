@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shop.Database;
 using Stripe;
+using Shop.Domain.Infrastructure;
+using Shop.Application.Cart;
+using Shop.UI.Infrastructure;
 
 namespace Shop.UI
 {
@@ -73,13 +76,18 @@ namespace Shop.UI
                })
              .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSession(options=>
+            services.AddSession(options =>
             {
                 options.Cookie.Name = "Cart";
                 options.Cookie.MaxAge = TimeSpan.FromMinutes(20);
             });
 
+            services.AddTransient<IStockManager, StockManager>();
+            services.AddScoped<ISessionManager,SessionManager>();
+
             StripeConfiguration.SetApiKey(_config.GetSection("Stripe")["SecretKey"]);
+
+            services.AddApplicationServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

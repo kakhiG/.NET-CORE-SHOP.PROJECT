@@ -17,6 +17,9 @@ using Shop.Domain.Infrastructure;
 using Shop.Application.Cart;
 using Shop.UI.Infrastructure;
 using Shop.Domain.Infrastracture;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Shop.UI.ValidationContexts;
 
 namespace Shop.UI
 {
@@ -75,8 +78,9 @@ namespace Shop.UI
                    options.Conventions.AuthorizePage("/Admin/ConfigureUsers", "Admin");
 
                })
-             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+             .AddFluentValidation(x=>x.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
+            
             services.AddSession(options =>
             {
                 options.Cookie.Name = "Cart";

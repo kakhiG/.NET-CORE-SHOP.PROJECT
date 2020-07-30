@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Shop.Application.ProductsAdmin;
 using Shop.Application.StockAdmin;
 using Shop.Application.UserAdmin;
 using Shop.Database;
+using Shop.UI.ViewModels.Admin;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Shop.UI.Controllers
@@ -14,17 +17,28 @@ namespace Shop.UI.Controllers
     [Authorize(Policy = "Admin")]
     public class UsersController : Controller
     {
-        private readonly CreateUser _createUser;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UsersController(CreateUser createUser)
+        public UsersController( UserManager<IdentityUser> userManager)
         {
-            _createUser = createUser;
+            _userManager = userManager;
         }
 
 
-        public async Task<IActionResult> CreateUser([FromBody] CreateUser.Request request)
+        public async Task<IActionResult> CreateUser(
+            [FromBody] CreateUserViewModel vm)
         {
-            await _createUser.Do(request);
+            var managerUser = new IdentityUser()
+            {
+                UserName = vm.Username
+            };
+
+            await _userManager.CreateAsync(managerUser, "password");
+
+
+            var managerClaim = new Claim("Role", "Manager");
+
+            await _userManager.AddClaimAsync(managerUser, managerClaim);
             return Ok();
         }
 

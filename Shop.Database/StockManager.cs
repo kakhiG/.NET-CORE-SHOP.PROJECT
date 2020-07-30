@@ -7,11 +7,9 @@ using Shop.Database;
 using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
 
-namespace Shop.Application.Cart
+namespace Shop.Database
 {
-
-
-    public class StockManager : IStockManager
+      public class StockManager : IStockManager
     {
         private ApplicationDbContext _ctx;
 

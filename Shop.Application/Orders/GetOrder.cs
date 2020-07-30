@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using Shop.Database;
 using Shop.Domain.Infrastracture;
 using Shop.Domain.Models;
@@ -9,6 +9,7 @@ using System.Text;
 
 namespace Shop.Application.Orders
 {
+    [Service]
     public class GetOrder
     {
        

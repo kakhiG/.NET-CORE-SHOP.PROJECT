@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Shop.Application.StockAdmin
 {
+    [Service]
     public class GetStock
     {
         

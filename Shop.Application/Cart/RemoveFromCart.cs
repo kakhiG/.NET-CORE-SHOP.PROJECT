@@ -4,6 +4,7 @@ using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Cart
 {
+    [Service]
     public class RemoveFromCart
     {
         private readonly ISessionManager _sessionManager;

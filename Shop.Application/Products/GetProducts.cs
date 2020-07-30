@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Shop.Application.Products
 {
+    [Service]
     public class GetProducts
     {
      
@@ -19,7 +20,7 @@ namespace Shop.Application.Products
         }
 
         public IEnumerable<ProductViewModel> Do() =>
-            _productManager.GetProducts(x => new ProductViewModel
+            _productManager.GetProductsWithStock(x => new ProductViewModel
             {
                 Name = x.Name,
                 Description = x.Description,

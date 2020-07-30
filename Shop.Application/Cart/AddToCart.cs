@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Shop.Domain.Infrastracture;
 using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 
 namespace Shop.Application.Cart
 {
+    [Service]
     public class AddToCart
     {
         private ISessionManager _sessionManager;

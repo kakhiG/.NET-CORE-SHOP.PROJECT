@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Shop.Database;
 using Shop.Domain;
 using Shop.Domain.Enums;
 using Shop.Domain.Infrastracture;
 
 namespace Shop.Application.OrdersAdmin
 {
+    [Service]
     public class GetOrders
     {
 

@@ -11,6 +11,8 @@ namespace Shop.UI.Infrastructure
 {
     public class SessionManager : ISessionManager
     {
+        private const string KeyCart = "Cart";
+        private const string KeyCustomerInfo = "customer-info ";
         private readonly ISession _session;
 
 
@@ -21,68 +23,69 @@ namespace Shop.UI.Infrastructure
 
         public string GetId() => _session.Id;
 
-        public void AddProduct(CartProduct cartProduct)
+        public void AddProduct(CartProduct CartProduct)
         {
-            var cartList = new List<CartProduct>();
-            var stringObject = _session.GetString("cart");
+            var CartList = new List<CartProduct>();
+            var stringObject = _session.GetString(KeyCart);
             if (!string.IsNullOrEmpty(stringObject))
             {
-                cartList = JsonConvert.DeserializeObject<List<CartProduct>>(stringObject);
+                CartList = JsonConvert.DeserializeObject<List<CartProduct>>(stringObject);
             }
 
-            if (cartList.Any(x => x.StockId == cartProduct.StockId))
+            if (CartList.Any(x => x.StockId == CartProduct.StockId))
             {
-                cartList.Find(x => x.StockId == cartProduct.StockId).Qty += cartProduct.Qty;
+                CartList.Find(x => x.StockId == CartProduct.StockId).Qty += CartProduct.Qty;
             }
             else
             {
-                cartList.Add(cartProduct);
+                CartList.Add(CartProduct);
 
             }
 
-            stringObject = JsonConvert.SerializeObject(cartList);
+            stringObject = JsonConvert.SerializeObject(CartList);
 
-            _session.SetString("cart", stringObject);
+            _session.SetString(KeyCart, stringObject);
         }
 
         public void RemoveProduct(int stockId, int qty)
         {
-            var cartList = new List<CartProduct>();
-            var stringObject = _session.GetString("cart");
+            var CartList = new List<CartProduct>();
+            var stringObject = _session.GetString(KeyCart);
+
             if (string.IsNullOrEmpty(stringObject)) return;
-            cartList = JsonConvert.DeserializeObject<List<CartProduct>>(stringObject);
-            if (!cartList.Any(x => x.StockId == stockId)) return;
+            CartList = JsonConvert.DeserializeObject<List<CartProduct>>(stringObject);
+            if (!CartList.Any(x => x.StockId == stockId)) return;
             
              
-            cartList.Find(x => x.StockId == stockId).Qty -= qty;
+            CartList.Find(x => x.StockId == stockId).Qty -= qty;
              
-            stringObject = JsonConvert.SerializeObject(cartList);
+            stringObject = JsonConvert.SerializeObject(CartList);
                  
-            _session.SetString("cart", stringObject);
+            _session.SetString(KeyCustomerInfo, stringObject);
         }
 
         public IEnumerable<TResult> GetCart<TResult>(Func<CartProduct,TResult>selector)
         {
-            var stringObject = _session.GetString("cart");
+            var stringObject = _session.GetString(KeyCart);
 
             if (string.IsNullOrEmpty(stringObject))
 
                 return new List<TResult>();
             
-            var cartList = JsonConvert.DeserializeObject<IEnumerable<CartProduct>>(stringObject);
+            var CartList = JsonConvert.DeserializeObject<IEnumerable<CartProduct>>(stringObject);
 
-            return cartList.Select(selector);
+            return CartList.Select(selector);
         }
 
         public void AddCustomerInformation(CustomerInformation customer)
         {
             var stringObject = JsonConvert.SerializeObject(customer);
-            _session.SetString("customer-info", stringObject);
+            _session.SetString(KeyCustomerInfo, stringObject);
         }
 
         public CustomerInformation GetCustomerInformation()
         {
-            var stringObject = _session.GetString("customer-info");
+            var stringObject = _session.GetString(KeyCustomerInfo);
 
             if (string.IsNullOrEmpty(stringObject))
             {
@@ -93,9 +96,13 @@ namespace Shop.UI.Infrastructure
             return customerInformation;
         }
 
-        public List<CartProduct> GetCart()
+        public void CleanCart()
         {
-            throw new NotImplementedException();
+            _session.Remove(KeyCart);
         }
+
+        
+
+        
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shop.Domain.Infrastructure;
 using Shop.Database;
 using Shop.Domain.Models;
@@ -12,6 +10,7 @@ using Shop.Domain.Infrastracture;
 
 namespace Shop.Application.Cart
 {
+    [Service]
     public class GetCart
     {
         private ISessionManager _sessionManager;

@@ -6,6 +6,7 @@ using Shop.Domain.Infrastracture;
 
 namespace Shop.Application.OrdersAdmin
 {
+    [Service]
     public class GetOrder
     {
         private readonly IOrderManager _orderManager;

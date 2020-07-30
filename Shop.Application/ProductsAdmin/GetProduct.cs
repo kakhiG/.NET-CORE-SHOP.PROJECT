@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Shop.Application.ProductsAdmin
 {
+    [Service]
     public class GetProduct
     {
         

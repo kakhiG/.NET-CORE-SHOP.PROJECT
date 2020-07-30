@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Application.ProductsAdmin 
 {
+    [Service]
     public class UpdateProduct
     {
 

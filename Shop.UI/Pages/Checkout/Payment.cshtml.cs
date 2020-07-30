@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Shop.Application.Cart;
 using Shop.Application.Orders;
 using Shop.Database;
+using Shop.Domain.Infrastructure;
 using Stripe;
 
 namespace Shop.UI.Pages.Checkout
@@ -22,8 +23,6 @@ namespace Shop.UI.Pages.Checkout
             PublicKey = config["Stripe:PublicKey"].ToString();
 
         }
-
-
         public IActionResult OnGet(
             [FromServices] GetCustomerInformation getCustomerInformation)
         {
@@ -41,7 +40,8 @@ namespace Shop.UI.Pages.Checkout
             string stripeEmail,
             string stripeToken,
             [FromServices] GetOrderCart getOrder,
-            [FromServices] CreateOrder createOrder)
+            [FromServices] CreateOrder createOrder,
+            [FromServices] ISessionManager sessionManager )
         {
             var customers = new CustomerService();
             var charges = new ChargeService();
@@ -83,7 +83,9 @@ namespace Shop.UI.Pages.Checkout
                     Qty = x.Qty
                 }).ToList()
             });
-            
+
+
+            sessionManager.CleanCart();
            
             return RedirectToPage("/Index");
         }

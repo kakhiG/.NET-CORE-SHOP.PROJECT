@@ -5,6 +5,7 @@ using Shop.Domain.Infrastracture;
 
 namespace Shop.Application.OrdersAdmin
 {
+    [Service]
     public class UpdateOrder
     {
         

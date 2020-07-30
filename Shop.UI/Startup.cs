@@ -16,6 +16,7 @@ using Stripe;
 using Shop.Domain.Infrastructure;
 using Shop.Application.Cart;
 using Shop.UI.Infrastructure;
+using Shop.Domain.Infrastracture;
 
 namespace Shop.UI
 {
@@ -82,8 +83,8 @@ namespace Shop.UI
                 options.Cookie.MaxAge = TimeSpan.FromMinutes(20);
             });
 
-            services.AddTransient<IStockManager, StockManager>();
-            services.AddScoped<ISessionManager,SessionManager>();
+          
+            
 
             StripeConfiguration.SetApiKey(_config.GetSection("Stripe")["SecretKey"]);
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Application.Products
 {
-
+    [Service]
     public class GetProduct
     {
         private readonly IStockManager _stockManager;

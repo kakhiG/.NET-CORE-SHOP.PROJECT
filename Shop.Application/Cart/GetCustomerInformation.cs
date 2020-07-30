@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using Newtonsoft.Json;
 using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
@@ -7,6 +7,7 @@ using System;
 
 namespace Shop.Application.Cart
 {
+    [Service]
     public class GetCustomerInformation
     {
         private ISessionManager _sessionManager;

@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using Shop.Domain.Infrastructure;
-using Shop.Database;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Shop.Application.Cart
 {
+    [Service]
     public class GetOrder
     {
         private ISessionManager _sessionManager;
